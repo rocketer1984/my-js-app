@@ -1,17 +1,15 @@
 {
-  "name": "jsapp",
+  "name": "todo app",
   "version": "1.0.0",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "echo \"Open index.html in a browser\"",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "jest": "^30.0.2"
-  },
+  "author": "Cesar Rivadeneyra",
+  "license": "MIT",
+  "description": "A simple frontend to-do list app",
+  "private": true,
   "devDependencies": {
     "@playwright/test": "^1.53.1"
   }
