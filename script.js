@@ -1,4 +1,4 @@
-const initialTasks = ["Clean the yard", "Buy groceries", "Call Mom"];
+const initialTasks = ["Clean the yard", "Go swim", "Call Mom"];
 
 function preloadTodos() {
   initialTasks.forEach(task => {
