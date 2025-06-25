@@ -15,7 +15,7 @@ test.describe('Unit tests for script.js functions', () => {
     await expect(items).toHaveCount(3);
 
     await expect(items.nth(0)).toHaveText('Clean the yard');
-    await expect(items.nth(1)).toHaveText('Buy groceries');
+    await expect(items.nth(1)).toHaveText('Go swim');
     await expect(items.nth(2)).toHaveText('Call Mom');
   });
 
