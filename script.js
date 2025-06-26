@@ -7,22 +7,33 @@ function preloadTodos() {
 }
 
 function addTodo() {
-    const input = document.getElementById("todo-input");
-    const task = input.value.trim();
-    if (task === "") return;
-  
-    addTodoItem(task);
-    input.value = "";
-  }
-  
-  function addTodoItem(task) {
-    const list = document.getElementById("todo-list");
-    const item = document.createElement("li");
-    item.textContent = task;
-  
-    item.onclick = () => list.removeChild(item);
-    list.appendChild(item);
-  }
+  const input = document.getElementById("todo-input");
+  const task = input.value.trim();
+  if (task === "") return;
 
-  window.onload = preloadTodos;
-  
+  addTodoItem(task);
+  input.value = "";
+}
+
+function addTodoItem(task) {
+  const list = document.getElementById("todo-list");
+  const item = document.createElement("li");
+  item.textContent = task;
+
+  item.onclick = () => list.removeChild(item);
+  list.appendChild(item);
+}
+
+function handleKeyPress(event) {
+  if (event.key === "Enter") {
+    addTodo();
+  }
+}
+
+window.onload = () => {
+  preloadTodos();
+
+  // Add this listener to the input
+  document.getElementById("todo-input").addEventListener("keydown", handleKeyPress);
+};
+
