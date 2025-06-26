@@ -21,7 +21,7 @@ test.describe('To-Do List UI', () => {
     // Check the exact text of each item
     await expect(items.nth(0)).toHaveText('Clean the yard');
     await expect(items.nth(1)).toHaveText('Go swim');
-    await expect(items.nth(2)).toHaveText('Call Mom');
+    await expect(items.nth(2)).toHaveText('Mom');
   });
 
   // ✅ Test 2: Add a new task to the list

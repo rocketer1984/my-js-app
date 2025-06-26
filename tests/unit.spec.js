@@ -16,7 +16,7 @@ test.describe('Unit tests for script.js functions', () => {
 
     await expect(items.nth(0)).toHaveText('Clean the yard');
     await expect(items.nth(1)).toHaveText('Go swim');
-    await expect(items.nth(2)).toHaveText('Call Mom');
+    await expect(items.nth(2)).toHaveText('Mom');
   });
 
   test('addTodoItem should add a single task to the list', async ({ page }) => {
