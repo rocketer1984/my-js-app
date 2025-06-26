@@ -30,10 +30,23 @@ function handleKeyPress(event) {
   }
 }
 
-window.onload = () => {
-  preloadTodos();
+if (typeof window !== 'undefined') {
+  window.onload = () => {
+    preloadTodos();
 
-  // Add this listener to the input
-  document.getElementById("todo-input").addEventListener("keydown", handleKeyPress);
-};
+    // Add this listener to the input
+    document.getElementById("todo-input").addEventListener("keydown", handleKeyPress);
+  };
+}
+
+// Needed to export information for unit testing
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    preloadTodos,
+    addTodo,
+    addTodoItem,
+    handleKeyPress,
+    initialTasks,
+  };
+}
 

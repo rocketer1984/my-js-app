@@ -6,7 +6,7 @@ test.describe('To-Do List UI', () => {
 
   // Before each test, load the index.html page directly using the file:// protocol
   test.beforeEach(async ({ page }) => {
-    const filePath = path.resolve(__dirname, '../index.html');
+    const filePath = path.resolve(__dirname, '../../index.html');
     const fileUrl = 'file://' + filePath.replace(/\\/g, '/'); // Handle Windows backslashes
     await page.goto(fileUrl);
   });
@@ -57,7 +57,6 @@ test.describe('To-Do List UI', () => {
     });
 
     // Verify that the cursor is 'pointer'
-    // expect(cursor).toBe('url(\"file:///C:/Projects/jsApp/resources/trashIcon.png\"), pointer');
     expect(cursor).toMatch(/url\([^)]*trashIcon\.png[^)]*\)|pointer/);
 
 
