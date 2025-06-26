@@ -1,5 +1,10 @@
 const { test, expect } = require('@playwright/test');
 const path = require('path');
+const {preloadTodos,
+  addTodo,
+  addTodoItem,
+  handleKeyPress,
+  initialTasks} = require('../../script.js');
 
 // Group all tests related to the To-Do UI
 test.describe('To-Do List UI', () => {
@@ -19,9 +24,9 @@ test.describe('To-Do List UI', () => {
     await expect(items).toHaveCount(3);
 
     // Check the exact text of each item
-    await expect(items.nth(0)).toHaveText('Clean the yard');
-    await expect(items.nth(1)).toHaveText('Go swim');
-    await expect(items.nth(2)).toHaveText('Mom');
+    for (let i = 0; i < initialTasks.length; i++) {
+      await expect(items.nth(i)).toHaveText(initialTasks[i]);
+    }
   });
 
   // ✅ Test 2: Add a new task to the list
