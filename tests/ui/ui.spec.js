@@ -1,75 +1,74 @@
 const { test, expect } = require('@playwright/test');
+const fs = require('fs');
 const path = require('path');
-const {preloadTodos,
-  addTodo,
-  addTodoItem,
-  handleKeyPress,
-  initialTasks} = require('../../script.js');
 
-// Group all tests related to the To-Do UI
+const mockTodos = [
+  { id: 1, task: 'Clip bushes' },
+  { id: 2, task: 'Tighten garage door' },
+  { id: 3, task: 'Seal driveway' },
+];
+
 test.describe('To-Do List UI', () => {
-
-  // Before each test, load the index.html page directly using the file:// protocol
   test.beforeEach(async ({ page }) => {
+    // ✅ Route API requests before loading the page
+    await page.route('**/api/todos', route => {
+      if (route.request().method() === 'GET') {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify(mockTodos),
+        });
+      } else if (route.request().method() === 'POST') {
+        route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ id: 4, task: 'Walk the dog' }),
+        });
+      }
+    });
+
+    await page.route('**/api/todos/*', route => {
+      if (route.request().method() === 'DELETE') {
+        route.fulfill({ status: 200 });
+      }
+    });
+
+    // ✅ Now load index.html *after* mocks
     const filePath = path.resolve(__dirname, '../../index.html');
-    const fileUrl = 'file://' + filePath.replace(/\\/g, '/'); // Handle Windows backslashes
-    await page.goto(fileUrl);
+    const html = fs.readFileSync(filePath, 'utf-8');
+    await page.setContent(html, { waitUntil: 'load' });
   });
 
-  // ✅ Test 1: Check that the initial tasks are loaded into the list
   test('should preload initial tasks', async ({ page }) => {
     const items = page.locator('#todo-list li');
-
-    // Expect exactly 3 tasks to be preloaded
     await expect(items).toHaveCount(3);
 
-    // Check the exact text of each item
-    for (let i = 0; i < initialTasks.length; i++) {
-      await expect(items.nth(i)).toHaveText(initialTasks[i]);
+    for (let i = 0; i < mockTodos.length; i++) {
+      await expect(items.nth(i)).toHaveText(mockTodos[i].task);
     }
   });
 
-  // ✅ Test 2: Add a new task to the list
   test('should add a new task', async ({ page }) => {
-    // Fill the input with a new task
     await page.fill('#todo-input', 'Walk the dog');
-
-    // Click the "Add" button
     await page.click('button');
 
     const items = page.locator('#todo-list li');
-
-    // Expect 4 items now (3 preloaded + 1 new)
     await expect(items).toHaveCount(4);
-
-    // The new task should be the last one
     await expect(items.last()).toHaveText('Walk the dog');
   });
 
-  // ✅ Test 3: Remove a task and check cursor style on hover
   test('should show pointer cursor on hover and remove the task when clicked', async ({ page }) => {
     const items = page.locator('#todo-list li');
-
-    // Ensure 3 items initially
     await expect(items).toHaveCount(3);
 
-    // Hover over the first item
     await items.nth(0).hover();
-
-    // Evaluate the computed cursor style
-    const cursor = await items.nth(0).evaluate((el) => {
+    const cursor = await items.nth(0).evaluate(el => {
       return window.getComputedStyle(el).cursor;
     });
 
-    // Verify that the cursor is 'pointer'
-    expect(cursor).toMatch(/url\([^)]*trashIcon\.png[^)]*\)|pointer/);
+    expect(cursor).toMatch(/pointer|url\([^)]*trashIcon\.png[^)]*\)/);
 
-
-    // Click the item to remove it
     await items.nth(0).click();
-
-    // Confirm it's removed (2 items left)
     await expect(items).toHaveCount(2);
   });
-
 });

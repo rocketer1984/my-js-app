@@ -4,6 +4,17 @@
 
 const script = require('../../script');
 
+global.fetch = jest.fn((url, options) => {
+  if (options?.method === 'POST') {
+    return Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ id: 4, task: 'New Task' })
+    });
+  }
+});
+
+global.alert = jest.fn();
+
 describe('Unit tests for todo app', () => {
   beforeEach(() => {
     // Setup a clean DOM before each test
@@ -13,13 +24,6 @@ describe('Unit tests for todo app', () => {
     `;
   });
 
-  test('preloadTodos adds initial tasks', () => {
-    script.preloadTodos();
-    const items = document.querySelectorAll('#todo-list li');
-    expect(items.length).toBe(script.initialTasks.length);
-    expect(items[0].textContent).toBe(script.initialTasks[0]);
-  });
-
   test('addTodoItem adds a new item to the list', () => {
     script.addTodoItem('Test Task');
     const items = document.querySelectorAll('#todo-list li');
@@ -27,10 +31,10 @@ describe('Unit tests for todo app', () => {
     expect(items[0].textContent).toBe('Test Task');
   });
 
-  test('addTodo adds trimmed task from input and clears input', () => {
+  test('addTodo adds trimmed task from input and clears input', async () => {
     const input = document.getElementById('todo-input');
     input.value = '  New Task  ';
-    script.addTodo();
+    await script.addTodo();
     const items = document.querySelectorAll('#todo-list li');
     expect(items.length).toBe(1);
     expect(items[0].textContent).toBe('New Task');
