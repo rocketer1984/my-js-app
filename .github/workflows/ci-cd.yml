@@ -46,3 +46,10 @@ jobs:
             docker stop my-js-app || true
             docker rm my-js-app || true
             docker run -d -p 80:3000 --name my-js-app my-js-app
+      - name: SSH to EC2 and Start Server
+        run: |
+          ssh -i ~/jsAppKey.pem ec2-user@3.15.150.250 << 'EOF'
+            cd ~/jsApp
+            npm install
+            nohup node server.js > server.log 2>&1 &
+          EOF

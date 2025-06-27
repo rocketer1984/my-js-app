@@ -2,7 +2,7 @@
   "name": "todo app",
   "version": "1.0.0",
   "scripts": {
-    "start": "echo \"Open index.html in a browser\"",
+    "start": "node server.js",
     "test": "npm run test:unit && npm run test:ui",
     "test:unit": "jest tests/unit",
     "test:ui": "jest tests/unit"
